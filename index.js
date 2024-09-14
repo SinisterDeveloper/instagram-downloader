@@ -81,7 +81,7 @@ app.post('/video', async (req, res) => {
 		if (!links || links['results_number'] === 0) return res.status(404).send('No video found');
 
 		const downloadLink = links['url_list'][0];
-		const filePath = path.join(__dirname, 'downloads', `${fileId}.mp4`);
+		const filePath = join(__dirname, 'downloads', `${fileId}.mp4`);
 
 		const file = createWriteStream(filePath);
 
