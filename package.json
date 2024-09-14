@@ -12,6 +12,7 @@
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.21.0",
+    "ffmpeg": "^0.0.4",
     "instagram-url-direct": "^1.0.20"
   }
 }

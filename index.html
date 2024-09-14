@@ -19,7 +19,7 @@
         .container {
             text-align: center;
         }
-        input {
+        input[type="text"] {
             width: 300px;
             padding: 10px;
             border: 2px solid #444;
@@ -27,6 +27,22 @@
             background-color: #333;
             color: #e0e0e0;
             font-size: 16px;
+        }
+        label {
+            font-size: 16px;
+            color: #e0e0e0;
+            margin-left: 10px;
+        }
+        .checkbox-container {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #1f1f1f;
         }
         button {
             margin-top: 20px;
@@ -49,11 +65,16 @@
 		        e.preventDefault();
 
 		        const formData = new FormData(downloadForm);
+
+		        const isAudioChecked = document.getElementById('audio').checked;
+
 		        const link = formData.get('link');
 				if(!link.trim().startsWith('https://www.instagram.com/reel/')) return alert('enter a valid insta reel link vro 😭');
-		        document.getElementById('status').textContent = 'Sending Downloading Request to Server...';
+		        document.getElementById('status').textContent = 'Download request sent! Server is downloading the content...';
+				document.getElementById('downloader').disabled = true;
+
 		        let res = await fetch(
-			        `${window.location.protocol}//${window.location.host}/insta`,
+			        `${window.location.protocol}//${window.location.host}/video`,
 			        {
 				        method: 'POST',
 				        headers: {
@@ -65,6 +86,7 @@
                         })
 			        },
 		        );
+
 				if (!res.ok) {
 					switch (res.status) {
                         case 400:
@@ -73,18 +95,27 @@
                         case 404:
 							alert('i wasnt able to find ur reel vro 😭 are u sure its valid? check again');
 							break;
-                        case 500:
-							alert('The software got cooked 💀 let me know if this happens');
-							break;
                         default:
-							alert('something unexpected happened (im absolutely cooked 💀)');
+							alert('The software got cooked 💀 (the reel was private i think, if not let me know if this happens)');
 							break;
 					}
 				}
 				res = await res.json();
-				document.getElementById('status').textContent = 'Received File! Downloading...';
-				window.location.assign(`${window.location.protocol}//${window.location.host}/download/${res.id}`);
+				if (isAudioChecked) {
+					document.getElementById('status').textContent = 'Extracting Audio from the Video file...';
+
+					await fetch(`${window.location.protocol}//${window.location.host}/audio/${res.id}/`, {
+						method: 'POST'
+                    });
+					window.location.assign(`${window.location.protocol}//${window.location.host}/audio/${res.id}`);
+                }
+				else {
+					document.getElementById('status').textContent = 'Received File! Downloading...';
+					window.location.assign(`${window.location.protocol}//${window.location.host}/video/${res.id}`);
+                }
 		        document.getElementById('status').textContent = 'Downloaded!';
+		        document.getElementById('downloader').disabled = false;
+				document.getElementById('link').value = '';
 	        });
         }
     </script>
@@ -97,10 +128,14 @@
     <form id="download">
         <label>
             <b>Instagram Reel Link: </b>
-            <input type="text" name="link" placeholder="Enter Insta reel link">
+            <input type="text" name="link" id="link" placeholder="Enter Insta reel link">
         </label>
         <br>
-        <button type="submit">Download</button>
+        <div class="checkbox-container">
+            <input type="checkbox" id="audio">
+            <label for="audio">Audio-Only: </label>
+        </div>
+        <button type="submit" id="downloader">Download</button>
     </form>
     <p id="status"></p>
 </div>
