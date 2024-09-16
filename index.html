@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downloader</title>
+    <title>Instagram Downloader</title>
     <style>
         body {
             margin: 0;
@@ -19,31 +19,6 @@
         .container {
             text-align: center;
         }
-        input[type="text"] {
-            width: 300px;
-            padding: 10px;
-            border: 2px solid #444;
-            border-radius: 5px;
-            background-color: #333;
-            color: #e0e0e0;
-            font-size: 16px;
-        }
-        label {
-            font-size: 16px;
-            color: #e0e0e0;
-            margin-left: 10px;
-        }
-        .checkbox-container {
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #1f1f1f;
-        }
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -58,86 +33,14 @@
             background-color: #333;
         }
     </style>
-    <script>
-        window.onload = async () => {
-	        const downloadForm = document.getElementById('download');
-	        downloadForm.addEventListener('submit', async (e) => {
-		        e.preventDefault();
-
-		        const formData = new FormData(downloadForm);
-
-		        const isAudioChecked = document.getElementById('audio').checked;
-
-		        const link = formData.get('link');
-				if(!link.trim().startsWith('https://www.instagram.com/reel/')) return alert('enter a valid insta reel link vro 😭');
-		        document.getElementById('status').textContent = 'Download request sent! Server is downloading the content...';
-				document.getElementById('downloader').disabled = true;
-
-		        let res = await fetch(
-			        `${window.location.protocol}//${window.location.host}/video`,
-			        {
-				        method: 'POST',
-				        headers: {
-					        'Content-type':
-						        'application/json; charset=UTF-8',
-				        },
-                        body: JSON.stringify({
-                            link: link
-                        })
-			        },
-		        );
-
-				if (!res.ok) {
-					switch (res.status) {
-                        case 400:
-							alert('Cooked lol');
-							break;
-                        case 404:
-							alert('i wasnt able to find ur reel vro 😭 are u sure its valid? check again');
-							break;
-                        default:
-							alert('The software got cooked 💀 (the reel was private i think, if not let me know if this happens)');
-							break;
-					}
-				}
-				res = await res.json();
-				if (isAudioChecked) {
-					document.getElementById('status').textContent = 'Extracting Audio from the Video file...';
-
-					await fetch(`${window.location.protocol}//${window.location.host}/audio/${res.id}/`, {
-						method: 'POST'
-                    });
-					window.location.assign(`${window.location.protocol}//${window.location.host}/audio/${res.id}`);
-                }
-				else {
-					document.getElementById('status').textContent = 'Received File! Downloading...';
-					window.location.assign(`${window.location.protocol}//${window.location.host}/video/${res.id}`);
-                }
-		        document.getElementById('status').textContent = 'Downloaded!';
-		        document.getElementById('downloader').disabled = false;
-				document.getElementById('link').value = '';
-	        });
-        }
-    </script>
 </head>
 <body>
 <div class="container">
-    <h1>Video/Reel/Short Downloader (cuz why not)</h1><br>
+    <h1>Instagram Downloader</h1><br>
     <p>i dont have time to make this page look better sorry, dont mind the '90s look</p><br>
-    <p>oh and btw im still adding the Youtube downloader, its not yet ready although it will be, soon (hopefully)</p><hr>
-    <form id="download">
-        <label>
-            <b>Instagram Reel Link: </b>
-            <input type="text" name="link" id="link" placeholder="Enter Insta reel link">
-        </label>
-        <br>
-        <div class="checkbox-container">
-            <input type="checkbox" id="audio">
-            <label for="audio">Audio-Only: </label>
-        </div>
-        <button type="submit" id="downloader">Download</button>
-    </form>
-    <p id="status"></p>
+    <button onclick="window.location.href = `${window.location.protocol}//${window.location.host}/reel/`;">Reel Downloader</button>
+    <br>
+    <button onclick="window.location.href = `${window.location.protocol}//${window.location.host}/post/`;">Post Downloader</button>
 </div>
 </body>
 </html>
