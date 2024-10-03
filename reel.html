@@ -107,7 +107,7 @@
 					await fetch(`${window.location.protocol}//${window.location.host}/reel/audio/${res.id}/`, {
 						method: 'POST'
                     });
-					window.location.assign(`${window.location.protocol}//${window.location.host}/audio/${res.id}`);
+					window.location.assign(`${window.location.protocol}//${window.location.host}/reel/audio/${res.id}`);
                 }
 				else {
 					document.getElementById('status').textContent = 'Received File! Downloading...';
