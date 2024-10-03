@@ -8,6 +8,7 @@ const reelRouter = express.Router();
 
 let isRunning = false;
 const attempts = new Map();
+let validIds = {};
 
 reelRouter.get('/', function (req, res) {
 	return res.sendFile(join(__dirname, 'reel.html'));
@@ -17,20 +18,19 @@ reelRouter.get('/video/:id', (req, res) => {
 	const { id } = req.params;
 	if (!id) return res.sendStatus(400);
 
-	const video =  readdirSync('./reels').filter(e => e === `${id}.mp4`);
-	if (!video) return res.sendStatus(404);
+	if (!validIds[id]) return res.sendStatus(404);
 	isRunning = false;
-	return res.download(`./reels/${video[0]}`);
+	return res.download(`./reels/${id}.mp4`);
 });
 
 reelRouter.get('/audio/:id', (req, res) => {
 	const { id } = req.params;
 	if (!id) return res.sendStatus(400);
 
-	const audio =  readdirSync('./reels').filter(e => e === `${id}.mp3`);
-	if (!audio) return res.sendStatus(404);
+	if (!validIds[id]) return res.sendStatus(404);
+
 	isRunning = false;
-	return res.download(`./reels/${audio[0]}`);
+	return res.download(`./reels/${id}.mp3`);
 });
 
 reelRouter.post('/audio/:id', async (req, res) => {
@@ -48,9 +48,10 @@ reelRouter.post('/audio/:id', async (req, res) => {
 					console.log(error);
 					return res.sendStatus(500);
 				}
-				else
+				else {
+					validIds[id] = true;
 					return res.sendStatus(200);
-
+				}
 			});
 		}, function (err) {
 			console.log(err);
@@ -99,6 +100,7 @@ reelRouter.post('/video', async (req, res) => {
 						attempts.set(req.ip, attempts.get(req.ip) - 1);
 					}, 1000 * 60);
 
+					validIds[fileId] = true;
 					return res.json({
 						id: fileId,
 					});
