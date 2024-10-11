@@ -1,3 +1,7 @@
+const PORT = 5000;
+
+// ------------------------------------------------------------------------
+
 const express = require('express');
 const compression = require("compression");
 const {join} = require("path");
@@ -21,4 +25,4 @@ app.get('/scripts/*', (req, res) => {
 	return res.sendFile(join(__dirname, 'scripts', fileName));
 });
 
-app.listen(6969, () => console.log('Server running on http://localhost:6969'));
+app.listen(PORT, () => console.log('Server running on http://localhost:' + PORT));
