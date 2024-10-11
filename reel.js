@@ -16,7 +16,7 @@ reelRouter.get('/', function (req, res) {
 
 reelRouter.get('/index.css', function (req, res) {
 	return res.sendFile(join(__dirname, 'index.css'));
-})
+});
 
 reelRouter.get('/video/:id', (req, res) => {
 	const { id } = req.params;
