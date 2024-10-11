@@ -40,6 +40,9 @@ npm install
 npm start
 ```
 
+You'll now be able to access the webpage at `http://localhost:5000`. If you have changed the PORT settings, it'll be available at `http://localhost:<PORT>`.
+
+
 ## Additional Configuration
 
 #### PORT - You may change the PORT (defaulted to 5000) on which the application will run on. To do so, open the `index.js` file and modify the variable on the first line of the file to any valid PORT
