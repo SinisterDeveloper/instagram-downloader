@@ -14,6 +14,10 @@ reelRouter.get('/', function (req, res) {
 	return res.sendFile(join(__dirname, 'reel.html'));
 });
 
+reelRouter.get('/index.css', function (req, res) {
+	return res.sendFile(join(__dirname, 'index.css'));
+})
+
 reelRouter.get('/video/:id', (req, res) => {
 	const { id } = req.params;
 	if (!id) return res.sendStatus(400);
@@ -40,7 +44,6 @@ reelRouter.post('/audio/:id', async (req, res) => {
 	video = video[0];
 
 	try {
-		console.log('Video File: ', video);
 		const process = new ffmpeg(`./reels/${video}`);
 		process.then(function (video) {
 			video.fnExtractSoundToMP3(`./reels/${id}.mp3`, function (error) {

@@ -13,6 +13,10 @@ postRouter.get('/', function (req, res) {
 	return res.sendFile(join(__dirname, 'post.html'));
 });
 
+postRouter.get('/index.css', function (req, res) {
+	return res.sendFile(join(__dirname, 'index.css'));
+})
+
 postRouter.get('/media/:id', (req, res) => {
 	const { id } = req.params;
 	if (!id) return res.sendStatus(400);
